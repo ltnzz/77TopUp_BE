@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id_user   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String    @unique
+  password  String
+  username  String
+  createdat DateTime? @default(now()) @db.Timestamp(6)
+  role      role_user @default(user)
+}
+
+model admin {
+  id_admin  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String    @unique(map: "unique_email_admin")
+  password  String
+  username  String
+  createdat DateTime? @default(now()) @db.Timestamp(6)
+  role      role_user @default(admin)
+}
+
+model otp {
+  id_otp    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String?
+  otp       String?
+  expireat  DateTime? @db.Timestamp(6)
+  createdat DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model games {
+  id_game       String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  image         String?
+  createdat     DateTime?       @default(now()) @db.Timestamp(6)
+  updatedat     DateTime?       @db.Timestamp(6)
+  slug String? @unique(map: "unique_slug")
+  game_payments game_payments[]
+  midtrans      midtrans[]
+  packages      packages[]
+}
+
+model packages {
+  id_packages String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  price       Float
+  tag         String?
+  gameid      String?    @db.Uuid
+  image       String
+  midtrans    midtrans[]
+  games       games?     @relation(fields: [gameid], references: [id_game], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model payments {
+  id_payment    String          @id(map: "payments_pkey1") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  code          String          @unique
+  image         String?
+  isactive      Boolean?        @default(true)
+  createdat     DateTime?       @default(now()) @db.Timestamp(6)
+  game_payments game_payments[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model midtrans {
+  id_payment    String    @id(map: "payments_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  order_id      String    @unique(map: "payments_order_id_key")
+  useremail     String
+  paymentmethod String
+  gameid        String?   @db.Uuid
+  packageid     String?   @db.Uuid
+  amount        Float
+  status        String?   @default("pending")
+  createdat     DateTime? @default(now()) @db.Timestamp(6)
+  updatedat     DateTime? @db.Timestamp(6)
+  redirecturl   String
+  games         games?    @relation(fields: [gameid], references: [id_game], onDelete: Cascade, onUpdate: NoAction, map: "payments_gameid_fkey")
+  packages      packages? @relation(fields: [packageid], references: [id_packages], onDelete: Cascade, onUpdate: NoAction, map: "payments_packageid_fkey")
+}
+
+model game_payments {
+  gameid    String   @db.Uuid
+  paymentid String   @db.Uuid
+  games     games    @relation(fields: [gameid], references: [id_game], onDelete: Cascade, onUpdate: NoAction)
+  payments  payments @relation(fields: [paymentid], references: [id_payment], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([gameid, paymentid])
+}
+
+enum role_user {
+  admin
+  user
+}
