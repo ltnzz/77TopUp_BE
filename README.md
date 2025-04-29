@@ -1,3 +1,6 @@
+## Setup Project
+npm install
+
 ## Setup Database
 
 1. Buat database PostgreSQL dengan nama `mydb`
