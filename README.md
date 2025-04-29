@@ -1,4 +1,5 @@
 ## Setup Project
+```bash
 npm install
 
 ## Setup Database
