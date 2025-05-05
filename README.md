@@ -1,4 +1,4 @@
-
+# Setup Project
 
 ## Setup Database
 
@@ -7,3 +7,11 @@
 3. Jalankan migration:
    ```bash
    npx prisma migrate dev
+
+## Instalation
+   ```bash
+   https://github.com/ltnzz/77TopUp_BE.git
+   cd 77TopUp_BE
+   npm install
+   npm run dev
+
