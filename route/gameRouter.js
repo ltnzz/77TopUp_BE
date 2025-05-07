@@ -3,7 +3,7 @@ import { getAllGames, getDetailGame, getAllPayment } from "../controller/gamesCo
 
 const router = express.Router();
 
-router.get("/77topup", getAllGames);
+router.get("/77topup/homepage", getAllGames);
 router.get("/77topup/:slug", getDetailGame, getAllPayment);
 
 export default router;

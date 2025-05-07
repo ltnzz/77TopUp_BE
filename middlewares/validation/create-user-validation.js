@@ -4,10 +4,10 @@ const userSchema = Joi.object({
     email: Joi.string().email().required(), // wajib diisi
     username: Joi.string()
         .required()
-        .pattern(/^[a-zA-Z\s]+$/), //berupa huruf (kecil dan besar) dan spasi. wajib diis
+        .pattern(/^[a-zA-Z\s]+$/), //berupa huruf (kecil dan besar) dan spasi. wajib diisi
     password: Joi.string()
         .required()
-        .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/), //min 8 karakter, mengandung setidaknya 1 huruf kecil, 1 huruf besar, 1 digit. wajib diisi
+        .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/), //min 8 karakter, mengandung setidaknya 1 huruf kecil, 1 huruf besar, 1 digit angka. wajib diisi
 });
 
 function validateCreateUser(req, res, next) {

@@ -39,7 +39,10 @@ model games {
   image         String?
   createdat     DateTime?       @default(now()) @db.Timestamp(6)
   updatedat     DateTime?       @db.Timestamp(6)
-  slug String? @unique(map: "unique_slug")
+  slug          String          @unique
+  type          String?         @db.VarChar(10)
+  description   String?
+  isactive      Boolean?        @default(true)
   game_payments game_payments[]
   midtrans      midtrans[]
   packages      packages[]
@@ -52,6 +55,10 @@ model packages {
   tag         String?
   gameid      String?    @db.Uuid
   image       String
+  createdat   DateTime?  @default(now()) @db.Timestamp(6)
+  description String?
+  updatedat   DateTime?  @db.Timestamp(6)
+  isactive    Boolean?   @default(true)
   midtrans    midtrans[]
   games       games?     @relation(fields: [gameid], references: [id_game], onDelete: Cascade, onUpdate: NoAction)
 }

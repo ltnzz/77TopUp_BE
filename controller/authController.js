@@ -1,9 +1,8 @@
 import prisma from "../config/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
 
-export async function addNewUser(req, res) {
+export const addNewUser = async (req, res) => {
     try {
         const { email, username, password } = req.body;
 
@@ -150,29 +149,6 @@ export const admin = async (req, res) => {
         if(admin.role !== "admin") {
             throw new Error("Anda tidak memiliki akses untuk mengakses halaman ini.");
         }
-        
-        const otp = Math.floor(100000 + Math.random() * 900000).toString(); // generate OTP
-        
-        const expireat = new Date(Date.now() + 5 * 60 * 1000); // 5 menit
-
-        await prisma.otp.create({
-            data: { email, otp, expireat }
-        }); //insert data database
-
-        const transporter = nodemailer.createTransport({ 
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_FROM,
-                pass: process.env.EMAIL_PASSWORD
-            }
-        }); //config send email
-
-        await transporter.sendMail({
-            from: `"77Topup" <${process.env.EMAIL_FROM}>`,
-            to: email,
-            subject: 'Kode OTP',
-            text: `Kode OTP Anda : ${otp}.\nKode ini Berlaku Selama 5 Menit.`,
-          }); //send email
 
         return res
             .status(200)
@@ -203,7 +179,7 @@ export const adminVerify = async (req, res) => {
         const token = jwt.sign(
                 { id: admin.id_admin, role: "admin" },
                 process.env.JWT_SECRET,                
-                { expiresIn: '12h' }
+                { expiresIn: '2h' }
             ); //token untuk authorization admin (edit) kadaluarsan dalam 12 jam
             
         return res

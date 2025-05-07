@@ -30,6 +30,7 @@
     "globals": "^16.0.0",
     "midtrans-client": "^1.4.2",
     "nodemailer": "^6.10.0",
+    "redis": "^4.7.0",
     "slugify": "^1.6.6"
   }
 }

@@ -1,37 +1,39 @@
-import prisma from "../../config/db.js";
+import client from "../../config/redis.js";
+import nodemailer from "nodemailer";
 
-export const otpVerify = async (req, res, next) => {
-        try {
-        const { email, otp } = req.body;
+export const sendOTP = async (req, res, next) => {
+    try {
+        const { email } = req.body;
 
-        const otpRecord = await prisma.otp.findFirst({
-            where: {
-                email,
-                otp,
-                expireat: {
-                    gt: new Date()
-                }
+        const otp = Math.floor(100000 + Math.random() * 900000).toString(); // generate OTP
+
+        await client.set(`otp:${email}`, otp, { EX: 300 }); //simpan di redis dan simpan selama 5 menit
+    
+        const transporter = nodemailer.createTransport({ 
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_FROM,
+                pass: process.env.EMAIL_PASSWORD
             }
-        }); //cari otp di database
-
-        if(!otpRecord) {
-            return res
-                .status(401)
-                .json({
-                    message: "Invalid OTP",
-                }); 
-        }
-
-        await prisma.otp.deleteMany({ where: { email } }); //delete otp yang sudah kadaluarsa
-
-        next();
-        } catch (error) {
-            return res
-                .status(500)
-                .json({
-                    message: "Internal Server Error",
-                })
-        }
+        }); //config send email
+        
+        await transporter.sendMail({
+            from: `"77Topup" <${process.env.EMAIL_FROM}>`,
+            to: email,
+            subject: 'Kode OTP',
+            text: `Kode OTP Anda:\n\n${otp}\n\nKode ini Berlaku Selama 5 Menit.`,
+        }); //send email
+    
+    next();
+    } catch (error) {
+        console.error(error)
+        return res
+        .status(500)
+        .json({
+            message: "Internal Server Error",
+            error: error.message
+        })
+    }
 }
 
-export default otpVerify;
+export default sendOTP;

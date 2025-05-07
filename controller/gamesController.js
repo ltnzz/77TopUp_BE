@@ -3,10 +3,13 @@ import prisma from "../config/db.js";
 export const getAllGames = async (req, res) => {
     try {
         const games = await prisma.games.findMany({
+            where: { isactive: true },
             select: {
                 name: true,
                 image: true,
                 slug: true,
+                type: true,
+                isactive: true
             }
         });
 
@@ -27,8 +30,8 @@ export const getAllGames = async (req, res) => {
 export const getDetailGame = async (req, res) => {
     const { slug } = req.params;
     try {
-        const game = await prisma.games.findUnique({
-            where: { slug },
+        const game = await prisma.games.findFirst({
+            where: { slug, isactive: true },
             include: {
               packages: true,
               game_payments: {
@@ -44,7 +47,7 @@ export const getDetailGame = async (req, res) => {
             return res
                 .status(404)
                 .json({
-                    message: "Sedang dalam Maintanance"
+                    message: "Game sedang dalam maintanance"
                 });
         }
         return res
@@ -54,6 +57,7 @@ export const getDetailGame = async (req, res) => {
                     name: game.name,
                     slug: game.slug,
                     image: game.image,
+                    isactive: game.isactive,
                 },
                 packages: game.packages,
                 payments: game.game_payments.map(gp => gp.payments)
@@ -77,7 +81,7 @@ export const getAllPayment = async (req, res) => {
             select:{
                 name: true,
                 code: true,
-                image: true
+                image: true,
             }
         });
 
