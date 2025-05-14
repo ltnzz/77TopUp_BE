@@ -26,11 +26,14 @@ model admin {
 }
 
 model otp {
-  id_otp    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email     String?
-  otp       String?
-  expireat  DateTime? @db.Timestamp(6)
-  createdat DateTime? @default(now()) @db.Timestamp(6)
+  id_otp        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String?
+  otp           String?
+  expireat      DateTime? @db.Timestamp(6)
+  createdat     DateTime? @default(now()) @db.Timestamp(6)
+  attempt       Int?      @default(0)
+  isverified    Boolean?  @default(false)
+  cooldownuntil DateTime? @default(now()) @db.Timestamp(6)
 }
 
 model games {

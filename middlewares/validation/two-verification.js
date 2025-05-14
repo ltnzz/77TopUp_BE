@@ -1,5 +1,5 @@
-import client from "../../config/redis.js";
 import nodemailer from "nodemailer";
+import prisma from "../../config/db.js";
 
 export const sendOTP = async (req, res, next) => {
     try {
@@ -7,7 +7,15 @@ export const sendOTP = async (req, res, next) => {
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString(); // generate OTP
 
-        await client.set(`otp:${email}`, otp, { EX: 300 }); //simpan di redis dan simpan selama 5 menit
+        const expireat = new Date(Date.now() + 5 * 60 * 1000); // OTP expires in 5 minutes
+
+        await prisma.otp.create({
+            data: {
+                email,
+                otp,
+                expireat
+            }
+        })
     
         const transporter = nodemailer.createTransport({ 
             service: 'gmail',

@@ -1,5 +1,6 @@
 import prisma from '../config/db.js';
 import generateUniqueSlug from '../utils/slugify.js';
+import uploadImage from '../utils/cloud.js';
 
 export const addGame = async (req, res) => {
     try {
@@ -13,13 +14,18 @@ export const addGame = async (req, res) => {
         }
 
         const slug = await generateUniqueSlug(name, "games");
+
+        let imageURL = "";
+        if(req.file) {
+            imageURL = await uploadImage(req.file.path, "games");
+        }
         
         const game = await prisma.games.create({
             data: {
                 name, 
                 slug, 
                 description: description || "", 
-                image: image  || "", 
+                image: imageURL  || "", 
                 type
             }
         })
@@ -227,12 +233,17 @@ export const addPackageGame = async (req, res) => {
 
         const priceFloat = parseFloat(price);
 
+        let imageURL = "";
+        if(req.file) {
+            imageURL = await uploadImage(req.file.path, "packages");
+        }
+
         const newPackage = await prisma.packages.create({
             data: {
                 gameid,
                 name,
                 price: priceFloat,
-                image,
+                image: imageURL,
                 tag: tag || "",
                 description: description || "",
             }
