@@ -153,7 +153,8 @@ export const admin = async (req, res) => {
         return res
             .status(200)
             .json({
-                message: "OTP telah dikirimkan ke email Anda."
+                message: "OTP telah dikirimkan ke email Anda.",
+                // next: 
             });    
     } catch(error) {
         return res

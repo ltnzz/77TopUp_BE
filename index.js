@@ -6,11 +6,14 @@ import adminRouter from "./route/adminRouter.js";
 import searchBarRouter from "./route/searchBarRouter.js";
 import cloudRouter from "./route/cloudRouter.js";
 import midtransRouter from "./route/midtrans.js"
+import cors from "cors";
 import cron from "./utils/cleanOtp.js";
 
 dotenv.config();
 const app = express();
 const PORT = 3000;
+
+app.use(cors({ origin: 'http://localhost:7700' }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -37,18 +37,17 @@ model otp {
 }
 
 model games {
-  id_game       String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String
-  image         String?
-  createdat     DateTime?       @default(now()) @db.Timestamp(6)
-  updatedat     DateTime?       @db.Timestamp(6)
-  slug          String          @unique
-  type          String?         @db.VarChar(10)
-  description   String?
-  isactive      Boolean?        @default(true)
-  game_payments game_payments[]
-  midtrans      midtrans[]
-  packages      packages[]
+  id_game     String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  image       String?
+  createdat   DateTime?  @default(now()) @db.Timestamp(6)
+  updatedat   DateTime?  @db.Timestamp(6)
+  slug        String     @unique
+  type        String?    @db.VarChar(10)
+  description String?
+  isactive    Boolean?   @default(true)
+  midtrans    midtrans[]
+  packages    packages[]
 }
 
 model packages {
@@ -64,17 +63,6 @@ model packages {
   isactive    Boolean?   @default(true)
   midtrans    midtrans[]
   games       games?     @relation(fields: [gameid], references: [id_game], onDelete: Cascade, onUpdate: NoAction)
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model payments {
-  id_payment    String          @id(map: "payments_pkey1") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String
-  code          String          @unique
-  image         String?
-  isactive      Boolean?        @default(true)
-  createdat     DateTime?       @default(now()) @db.Timestamp(6)
-  game_payments game_payments[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -94,13 +82,15 @@ model midtrans {
   packages      packages? @relation(fields: [packageid], references: [id_packages], onDelete: Cascade, onUpdate: NoAction, map: "payments_packageid_fkey")
 }
 
-model game_payments {
-  gameid    String   @db.Uuid
-  paymentid String   @db.Uuid
-  games     games    @relation(fields: [gameid], references: [id_game], onDelete: Cascade, onUpdate: NoAction)
-  payments  payments @relation(fields: [paymentid], references: [id_payment], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([gameid, paymentid])
+model transactions {
+  id           Int       @id @default(autoincrement())
+  order_id     String    @unique @db.VarChar(100)
+  email        String    @db.VarChar(255)
+  id_packages  String    @db.VarChar(50)
+  gross_amount Int
+  status       String?   @default("pending") @db.VarChar(50)
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  updated_at   DateTime? @db.Timestamp(6)
 }
 
 enum role_user {
