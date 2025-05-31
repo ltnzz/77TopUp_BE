@@ -39,7 +39,10 @@ app.use(midtransRouter);
 
 // export const handler = serverless(app);
 
-// export default app;
+app.get("/", (req, res) => res.send("Hello, Vercel!"));
+
 app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
 });
+
+export default app;
