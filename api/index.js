@@ -9,14 +9,23 @@ import cloudRouter from "../route/cloudRouter.js";
 import midtransRouter from "../route/midtrans.js"
 
 import cors from "cors";
-import serverless from "serverless-http";
 import cron from "../utils/cleanOtp.js";
+// import serverless from "serverless-http";
 
 dotenv.config();
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
+const allowedOrigin = process.env.FE_ORIGIN || "http//localhost:7700";
+
+app.use(
+    cors({
+        origin: allowedOrigin,
+        method: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true
+    })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,9 +37,9 @@ app.use(searchBarRouter);
 app.use(cloudRouter);
 app.use(midtransRouter);
 
-export const handler = serverless(app);
+// export const handler = serverless(app);
 
-export default app;
-// app.listen(PORT, async () => {
-//     console.log(`Server berjalan di http://localhost:${PORT}`);
-// });
+// export default app;
+app.listen(PORT, async () => {
+    console.log(`Server berjalan di http://localhost:${PORT}`);
+});
