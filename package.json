@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node api/index.js",
-    "dev": "nodemon dev.js"
+    "dev": "nodemon dev.js",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
