@@ -34,11 +34,6 @@ export const getDetailGame = async (req, res) => {
             where: { slug, isactive: true },
             include: {
               packages: true,
-              game_payments: {
-                include: {
-                    payments: true
-                }
-              }
             }
           });
           
@@ -60,7 +55,6 @@ export const getDetailGame = async (req, res) => {
                     isactive: game.isactive,
                 },
                 packages: game.packages,
-                payments: game.game_payments.map(gp => gp.payments)
             });
     } catch(error) {
         return res
