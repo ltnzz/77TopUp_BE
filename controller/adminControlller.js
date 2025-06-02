@@ -203,9 +203,9 @@ export const deleteGame = async (req, res) => {
 
 export const addPackageGame = async (req, res) => {
     try {
-        const { gameid, name, price, tag, image, description } = req.body;
+        const { gameid, name, price, tag, description } = req.body;
 
-        if (!gameid || !name || !price || !image) {
+        if (!gameid || !name || !price || !req.file) {
             return res.status(400).json({
                 message: "Harap isi semua field yang diperlukan (gameid, name, price, image)."
             });
