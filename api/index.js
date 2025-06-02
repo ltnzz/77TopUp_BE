@@ -9,7 +9,6 @@ import cloudRouter from "../route/cloudRouter.js";
 import midtransRouter from "../route/midtrans.js"
 
 import cors from "cors";
-// import serverless from "serverless-http";
 import cron from "../utils/cleanOtp.js";
 
 dotenv.config();
@@ -32,20 +31,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
-app.use(authRouter);
-app.use(gameRouter);
-app.use(adminRouter);
-app.use(searchBarRouter);
+app.use('/auth', authRouter);
+app.use('/game', gameRouter);
+app.use('/admin', adminRouter);
+app.use('/search', searchBarRouter);
 app.use(cloudRouter);
-app.use(midtransRouter);
-
-// export const handler = serverless(app);
-
+app.use('/pay', midtransRouter);
 
 app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
 });
-
-// const handler = serverless(app);
-
-// export default handler;
