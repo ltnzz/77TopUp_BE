@@ -2,10 +2,11 @@ import express from "express";
 import  { addGame, disableGame, updateGame, enablePackages, deleteGame, addPackageGame, updatePackage, enableGame, disablePackages, deletePackages } from "../controller/adminControlller.js";
 import { validateGame } from "../middlewares/validation/validation-game.js";
 import { getAllGames } from "../controller/gamesController.js";
-import multer from "multer";
+import upload from "../middlewares/multer.js";
+// import multer from "multer";
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
+// const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/77topup/admin/homepage", getAllGames);
 router.post("/77topup/admin/add", upload.single('image'), validateGame, addGame);
