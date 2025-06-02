@@ -213,16 +213,16 @@ export const addPackageGame = async (req, res) => {
 
         const existingPackage = await prisma.packages.findFirst({
             where: {
-              name,
-              gameid
+                name,
+                gameid
             }
-          });
-          
-          if (existingPackage) {
+        });
+
+        if (existingPackage) {
             return res.status(400).json({
-              message: "Package dengan nama yang sama sudah ada di game ini."
+                message: "Package dengan nama yang sama sudah ada di game ini."
             });
-          }
+        }
 
         const game = await prisma.games.findUnique({ where: { id_game: gameid } });
         if (!game) {

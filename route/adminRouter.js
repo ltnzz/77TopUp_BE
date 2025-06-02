@@ -5,7 +5,7 @@ import { getAllGames } from "../controller/gamesController.js";
 import multer from "multer";
 
 const router = express.Router();
-const upload = multer({ dest: '/uploads'})
+const upload = multer({ dest: '/tmp'})
 
 router.get("/77topup/admin/homepage", getAllGames);
 router.post("/77topup/admin/add", upload.single('image'), validateGame, addGame);
