@@ -9,7 +9,7 @@ import cloudRouter from "../route/cloudRouter.js";
 import midtransRouter from "../route/midtrans.js"
 
 import cors from "cors";
-import serverless from "serverless-http";
+// import serverless from "serverless-http";
 import cron from "../utils/cleanOtp.js";
 
 dotenv.config();
@@ -46,6 +46,6 @@ app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
 });
 
-const handler = serverless(app);
+// const handler = serverless(app);
 
-export default handler;
+// export default handler;
