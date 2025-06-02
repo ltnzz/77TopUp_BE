@@ -33,10 +33,10 @@ export const getDetailGame = async (req, res) => {
         const game = await prisma.games.findFirst({
             where: { slug, isactive: true },
             include: {
-              packages: true,
+                packages: true,
             }
-          });
-          
+        });
+
 
         if(!game) {
             return res
