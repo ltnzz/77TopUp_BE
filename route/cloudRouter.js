@@ -1,14 +1,13 @@
 import express from "express";
-import multer from "multer";
-import uploadImage from "../utils/cloud.js";
+import upload from "../middlewares/multer.js";
+import { streamUpload } from "../utils/cloud.js";
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' }); // upload settings
 
 router.post('/upload', upload.single('image'), async (req, res) => {
     try {
-        const filePath = req.file.path;
-        const imageURL = await uploadImage(filePath);
+        const fileBuffer = req.file.buffer;
+        const imageURL = await streamUpload(fileBuffer);
 
         res.json({ success: true, url: imageURL });
     } catch (error) {
