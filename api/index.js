@@ -10,6 +10,7 @@ import midtransRouter from "../route/midtrans.js"
 
 import cors from "cors";
 import cron from "../utils/cleanOtp.js";
+import ServerlessHttp from "serverless-http";
 // import serverless from "serverless-http";
 
 dotenv.config();
@@ -45,4 +46,6 @@ app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
 });
 
-export default app;
+const handler = serverless(app);
+
+export default handler;
