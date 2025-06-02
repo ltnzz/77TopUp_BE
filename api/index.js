@@ -9,9 +9,8 @@ import cloudRouter from "../route/cloudRouter.js";
 import midtransRouter from "../route/midtrans.js"
 
 import cors from "cors";
-import cron from "../utils/cleanOtp.js";
 import serverless from "serverless-http";
-// import serverless from "serverless-http";
+import cron from "../utils/cleanOtp.js";
 
 dotenv.config();
 const app = express();
@@ -31,6 +30,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (req, res) => res.send("Hello, Vercel!"));
+
 app.use(authRouter);
 app.use(gameRouter);
 app.use(adminRouter);
@@ -40,7 +41,6 @@ app.use(midtransRouter);
 
 // export const handler = serverless(app);
 
-app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
 app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
