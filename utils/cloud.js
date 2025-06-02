@@ -1,15 +1,14 @@
 import cloudinary from "../config/cloudinary.js";
+import streamifier from "streamifier";
 
-const uploadImage = async (path, folderName = "misc") => {
-    try {
-        const result = await cloudinary.uploader.upload(path, {
-            folder: folderName
-        })
-        return result.secure_url;
-    } catch (error) {
-        console.error(error);
-        throw new Error('Upload Failed');
-    }
-}
+export const streamUpload = (buffer, folder) => {
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream({ folder }, (error, result) => {
+            if (result) resolve(result.secure_url);
+            else reject(error);
+        });
+    streamifier.createReadStream(buffer).pipe(stream);
+    });
+};
 
-export default uploadImage;
+export default streamUpload;
