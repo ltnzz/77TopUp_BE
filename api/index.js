@@ -46,6 +46,6 @@ app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
 });
 
-const handler = serverless(app);
+const handler = ServerlessHttp(app);
 
 export default handler;

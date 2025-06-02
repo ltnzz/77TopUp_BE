@@ -12,6 +12,4 @@ const uploadImage = async (path, folderName = "misc") => {
     }
 }
 
-
-
 export default uploadImage
