@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import swaggerUi from "swagger-ui-express";
+import { openApiSpec } from "../swagger.js";
 
 import authRouter from "../route/authRouter.js";
 import gameRouter from "../route/gameRouter.js";
@@ -37,6 +39,8 @@ app.use('/', adminRouter);
 app.use('/', searchBarRouter);
 app.use(cloudRouter);
 app.use('/', midtransRouter);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
 app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
