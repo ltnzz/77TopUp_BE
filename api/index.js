@@ -23,7 +23,7 @@ app.use(
     cors({
         origin: allowedOrigin,
         methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type: multipart/form-data", "Authorization"],
+        allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true
     })
 );
