@@ -7,27 +7,27 @@
  */
 
 export const openApiSpec = {
-  openapi: "3.0.0", // Versi OpenAPI yang digunakan
+  openapi: "3.0.0",
   info: {
     title: "77TopUp API Documentation",
-    version: "1.0.0", // Versi API Anda
-    description: "API documentation for the 77TopUp application. This document describes all available endpoints for users and administrators.",
+    version: "1.0.0", 
+    description: "API documentation for the 77TopUp website. This document describes all available endpoints for users and administrators.",
     contact: {
       name: "77TopUp Support",
-      url: "http://example.com/support", // Ganti dengan URL dukungan Anda
-      email: "support@77topup.com", // Ganti dengan email dukungan Anda
+      url: "http://example.com/support", 
+      email: "tujuhtujuhtopup@gmail.com", 
     },
   },
   servers: [
     {
-      url: "http://localhost:3000", // URL server pengembangan Anda
-      description: "Development server (Localhost)",
+      // url: "http://localhost:3000", 
+      // description: "Development server (Localhost)",
     },
-    // Anda bisa menambahkan server produksi di sini nanti
-    // {
-    //   url: "https://api.77topup.com",
-    //   description: "Production server",
-    // },
+    
+    {
+      url: "https://77-top-up-be.vercel.app/",
+      description: "Production server",
+    },
   ],
   tags: [
     {

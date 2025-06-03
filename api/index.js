@@ -37,27 +37,52 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
 const publicPath = path.join(__dirname, '..', 'public'); 
 app.use(express.static(publicPath));
 
+// app.get("/", (req, res) => res.send("Hello, Vercel!"));
+
+app.get("/", (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>77TopUp Backend</title>
+            <link rel="icon" href="/favicon.ico" type="image/x-icon">
+            <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+            <link rel="icon" type="image/png" href="/favicon-16x16.png" href="/favicon-16x16.png" sizes="16x16" />
+            </head>
+        <body>
+            <h1>Hello, Vercel!</h1>
+            <p>Your 77TopUp Backend is running.</p>
+            <p>API Documentation: <a href="/api-docs">/api-docs</a></p>
+            <img src="/favicon-32x32.png" alt="Gambar Contoh">
+        </body>
+        </html>
+    `);
+});
+
+const swaggerAssetsPath = path.join(__dirname, '..', 'swagger-assets');
+app.use('/swagger-assets-dist', express.static(swaggerAssetsPath));
+
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
 app.use(
-    "/api-docs", 
+    "/api-docs", // Rute di mana Swagger UI akan ditampilkan
     swaggerUi.serve,
     swaggerUi.setup(openApiSpec, {
-        // Arahkan Swagger UI ke aset di folder public
-        customCssUrl: '/swagger-ui.css',
+        customCssUrl: '/swagger-assets-dist/swagger-ui.css',
         customJs: [
-            '/swagger-ui-bundle.js',
-            '/swagger-ui-standalone-preset.js',
+            '/swagger-assets-dist/swagger-ui-bundle.js',
+            '/swagger-assets-dist/swagger-ui-standalone-preset.js',
         ],
-        customJsLoader: '/swagger-ui-init.js',
+        customJsLoader: '/swagger-assets-dist/swagger-ui-init.js',
+        favicon: '/swagger-assets-dist/favicon-32x32.png', 
     })
 );
-
 
 app.use('/', authRouter);
 app.use('/', gameRouter);
