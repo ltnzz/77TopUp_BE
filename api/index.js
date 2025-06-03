@@ -31,7 +31,19 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
+
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(openApiSpec, {
+        customCssUrl: '/api-docs-assets/swagger-ui.css',
+        customJs: [
+            '/api-docs-assets/swagger-ui-bundle.js',
+            '/api-docs-assets/swagger-ui-standalone-preset.js',
+        ],
+    })
+);
 
 app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
