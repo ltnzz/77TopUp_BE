@@ -37,13 +37,12 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
 const publicPath = path.join(__dirname, '..', 'public'); 
 app.use(express.static(publicPath));
 
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
-
-app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
 app.use(
     "/api-docs", 
