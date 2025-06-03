@@ -31,12 +31,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
-app.use('/auth', authRouter);
-app.use('/game', gameRouter);
-app.use('/admin', adminRouter);
-app.use('/search', searchBarRouter);
+app.use('/', authRouter);
+app.use('/', gameRouter);
+app.use('/', adminRouter);
+app.use('/', searchBarRouter);
 app.use(cloudRouter);
-app.use('/pay', midtransRouter);
+app.use('/', midtransRouter);
 
 app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
