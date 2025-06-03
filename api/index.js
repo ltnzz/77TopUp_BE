@@ -22,7 +22,7 @@ const allowedOrigin = process.env.FE_ORIGIN || "http://localhost:7700";
 app.use(
     cors({
         origin: allowedOrigin,
-        method: ["GET", "POST", "PUT", "DELETE"],
+        methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type: multipart/form-data", "Authorization"],
         credentials: true
     })
@@ -48,4 +48,5 @@ console.log("Is spec an object?", typeof openApiSpec === 'object' && openApiSpec
 
 app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
+    console.log(`Swagger UI tersedia di http://localhost:${PORT}/api-docs`);
 });
