@@ -31,7 +31,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
 app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
