@@ -3,6 +3,12 @@ import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import { openApiSpec } from "../docs/swagger.js";
 
+import path from "path"; 
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 import authRouter from "../routes/authRouter.js";
 import gameRouter from "../routes/gameRouter.js";
 import adminRouter from "../routes/adminRouter.js";
@@ -31,7 +37,24 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
+const publicPath = path.join(__dirname, '..', 'public'); 
+app.use(express.static(publicPath));
+
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
+
+app.use(
+    "/api-docs", 
+    swaggerUi.serve,
+    swaggerUi.setup(openApiSpec, {
+        // Arahkan Swagger UI ke aset di folder public
+        customCssUrl: '/swagger-ui.css',
+        customJs: [
+            '/swagger-ui-bundle.js',
+            '/swagger-ui-standalone-preset.js',
+        ],
+        customJsLoader: '/swagger-ui-init.js',
+    })
+);
 
 app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
