@@ -3,12 +3,12 @@ import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import { openApiSpec } from "../swagger.js";
 
-import authRouter from "../route/authRouter.js";
-import gameRouter from "../route/gameRouter.js";
-import adminRouter from "../route/adminRouter.js";
-import searchBarRouter from "../route/searchBarRouter.js";
-import cloudRouter from "../route/cloudRouter.js";
-import midtransRouter from "../route/midtrans.js"
+import authRouter from "../routes/authRouter.js";
+import gameRouter from "../routes/gameRouter.js";
+import adminRouter from "../routes/adminRouter.js";
+import searchBarRouter from "../routes/searchBarRouter.js";
+import cloudRouter from "../routes/cloudRouter.js";
+import midtransRouter from "../routes/midtrans.js"
 
 import cors from "cors";
 import cron from "../utils/cleanOtp.js";
