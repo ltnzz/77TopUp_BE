@@ -31,6 +31,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
+
 app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
 app.use('/', authRouter);
@@ -40,7 +42,9 @@ app.use('/', searchBarRouter);
 app.use(cloudRouter);
 app.use('/', midtransRouter);
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
+console.log("Swagger spec loaded:", !!openApiSpec);
+console.log("Type of spec:", typeof openApiSpec);
+console.log("Is spec an object?", typeof openApiSpec === 'object' && openApiSpec !== null);
 
 app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
