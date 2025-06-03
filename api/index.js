@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
-import { openApiSpec } from "../swagger.js";
+import { openApiSpec } from "../docs/swagger.js";
 
 import authRouter from "../routes/authRouter.js";
 import gameRouter from "../routes/gameRouter.js";
@@ -15,7 +15,7 @@ import cron from "../utils/cleanOtp.js";
 
 dotenv.config();
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const allowedOrigin = process.env.FE_ORIGIN || "http://localhost:7700";
 
