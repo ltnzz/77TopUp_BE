@@ -201,7 +201,6 @@ export const openApiSpec = {
       post: {
         summary: "Verify Admin OTP to complete login and get an access token.",
         tags: ["Authentication"],
-        security: [{ BearerAuth: [eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJpZCI6IjUwYjUyNDZhLTRkZjMtNDJjMi1hMGRmLWUwNzNiN2Y2YWJjZiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0MzI1Mjc5MywiZXhwIjoxNzQzMjk1OTkzfQaHvfQADVS6GFqSPA0LhFelB9qIbGJe72HnvJhbzpP1Y] }],
         requestBody: {
           required: true,
           content: {
