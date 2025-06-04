@@ -15,10 +15,8 @@ const gameUpdateValidation = Joi.object({
     type: Joi.string().valid("Mobile", "PC").required(),
 });
 
-export const validateGame = (req, res, next) => {
-    const validationSchema = req.body.id_game ? gameUpdateValidation : gameValidation;
-
-    const { error } = validationSchema.validate(req.body);
+export const validateAddGame = (req, res, next) => {
+    const { error } = gameValidation.validate(req.body);
 
     if (error) {
         return res.status(400).json({
@@ -28,4 +26,15 @@ export const validateGame = (req, res, next) => {
     next();
 }
 
-export default validateGame;
+export const validateUpdateGame = (req, res, next) => {
+    const { error } = gameUpdateValidation.validate(req.body);
+
+    if (error) {
+        return res.status(400).json({
+            message: error.details[0].message
+        });
+    }
+    next();
+}
+
+export default { validateAddGame, validateUpdateGame };

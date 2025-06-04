@@ -14,7 +14,7 @@ export const openApiSpec = {
     description: "API documentation for the 77TopUp website. This document describes all available endpoints for users and administrators.",
     contact: {
       name: "77TopUp Support",
-      url: "http://example.com/support", 
+      url: "https://www.instagram.com/ltnzzzz?igsh=MWZrcXdjNWtwM2F4Zw==", 
       email: "tujuhtujuhtopup@gmail.com", 
     },
   },
@@ -967,7 +967,6 @@ export const openApiSpec = {
         properties: {
           email: { type: "string", format: "email", description: "User's unique email address.", example: "user@example.com" },
           password: { type: "string", format: "password", description: "User's chosen password (min 6 characters).", minLength: 6, example: "StrongPass123" },
-          phoneNumber: { type: "string", description: "User's phone number.", example: "+6281234567890" },
           username: { type: "string", description: "User's chosen username (unique).", example: "johndoe" },
         },
       },

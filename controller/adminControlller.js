@@ -1,17 +1,23 @@
 import prisma from '../config/db.js';
 import generateUniqueSlug from '../utils/slugify.js';
-import { streamUpload } from '../utils/cloud.js';
+import { deleteImageFromCloudinary, streamUpload } from '../utils/cloud.js';
 
 export const addGame = async (req, res) => {
     try {
-        const { name, description, image, type } = req.body;
+        const { name, description, type } = req.body;
     
+        if (!name || !req.file || !type) {
+            return res.status(400).json({
+                message: "Harap isi semua field yang diperlukan (name, image, type)"
+            });
+        }
+        
         const checkGame = await prisma.games.findFirst({ where: {name} });
         if(checkGame) {
             return res.status(400).json({
                 message: "Game already exists",
             })
-        }
+        };
 
         const slug = await generateUniqueSlug(name, "games");
 
@@ -41,21 +47,53 @@ export const addGame = async (req, res) => {
 
 export const updateGame = async (req, res) => {
     try {
-        const { id_game, name, description, image, type } = req.body;
+        const { id_game, name, description, type } = req.body;
 
         const game = await prisma.games.findUnique({ where: { id_game } });
         if (!game) {
             return res.status(404).json({
                 message: "Game tidak ditemukan."
-            })
+            });
+        }
+        
+        let newImageURL = game.image;
+        let newImagePublicId = game.image_public_id;
+
+        if(req.file) {
+            // imageURL = await streamUpload(req.file.buffer, "games");
+            if (game.image_public_id) {
+                await deleteImageFromCloudinary(game.image_public_id);
+            }
+
+            const uploadResult = await streamUpload(req.file.buffer, "games");
+            newImageURL = uploadResult.secure_url;
+            newImagePublicId = uploadResult.public_id;
+        } else if (req.body.image === '') {
+            if (game.image_public_id) {
+                await deleteImageFromCloudinary(game.image_public_id);
+            }
+            newImageURL = null; 
+            newImagePublicId = null;
         }
 
-        if(
-            game.name === name &&
-            game.description === description &&
-            game.image === image &&
-            game.type === type
-        ) {
+        // if(
+        //     game.name === name &&
+        //     game.description === description &&
+        //     game.type === type
+        // ) {
+        //     return res.status(400).json({
+        //         message: "Tidak ada perubahan data."
+        //     })
+        // }
+
+        const hasChange = (
+            game.name !== name || 
+            game.description !== description ||
+            game.type !== type ||
+            game.image !== newImageURL 
+        );
+
+        if (!hasChange) {
             return res.status(400).json({
                 message: "Tidak ada perubahan data."
             })
@@ -66,12 +104,13 @@ export const updateGame = async (req, res) => {
             data: {
                 name,  
                 description: description || "", 
-                image: image  || "", 
+                image: newImageURL  || "",
+                image_public_id: newImagePublicId || "",
                 type,
                 updatedat: new Date()
             }
         });
-
+        
         res.status(200).json({
             message: "Game updated successfully",
             updateGame
@@ -207,7 +246,7 @@ export const addPackageGame = async (req, res) => {
 
         if (!gameid || !name || !price || !req.file) {
             return res.status(400).json({
-                message: "Harap isi semua field yang diperlukan (gameid, name, price, image)."
+                message: "Harap isi semua field yang diperlukan (gameid, name, price, image)"
             });
         }
 
@@ -223,7 +262,7 @@ export const addPackageGame = async (req, res) => {
                 message: "Package dengan nama yang sama sudah ada di game ini."
             });
         }
-
+        
         const game = await prisma.games.findUnique({ where: { id_game: gameid } });
         if (!game) {
             return res.status(400).json({
@@ -273,6 +312,7 @@ export const updatePackage = async (req, res) => {
             });
         }      
         
+        console.log(id_packages);
         const priceFloat = parseFloat(price);
 
         if(
@@ -286,7 +326,6 @@ export const updatePackage = async (req, res) => {
                 message: "Tidak ada perubahan pada package."
             })
         }
-
 
         const updatePackage = await prisma.packages.update({
             where: { id_packages },

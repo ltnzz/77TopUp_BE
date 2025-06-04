@@ -30,7 +30,7 @@ export const searchBar = async (req, res) => {
         //     }
         // })
 
-        // console.log(packages)
+        // console.log(packages);
         return res.status(200).json({ games });
     } catch (error) {
         console.error(error);

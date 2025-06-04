@@ -70,7 +70,7 @@ app.use('/swagger-assets-dist', express.static(swaggerUiDistPath));
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
 app.use(
-    "/api-docs", // Rute di mana Swagger UI akan ditampilkan
+    "/api-docs", 
     swaggerUi.serve,
     swaggerUi.setup(openApiSpec, {
         customCssUrl: '/swagger-assets-dist/swagger-ui.css',
@@ -90,9 +90,9 @@ app.use('/', searchBarRouter);
 app.use(cloudRouter);
 app.use('/', midtransRouter);
 
-console.log("Swagger spec loaded:", !!openApiSpec);
-console.log("Type of spec:", typeof openApiSpec);
-console.log("Is spec an object?", typeof openApiSpec === 'object' && openApiSpec !== null);
+// console.log("Swagger spec loaded:", !!openApiSpec);
+// console.log("Type of spec:", typeof openApiSpec);
+// console.log("Is spec an object?", typeof openApiSpec === 'object' && openApiSpec !== null);
 
 app.listen(PORT, async () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
