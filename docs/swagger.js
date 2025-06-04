@@ -876,7 +876,7 @@ export const openApiSpec = {
         parameters: [
           {
             in: "query",
-            name: "q",
+            name: "",
             schema: { type: "string" },
             required: true,
             description: "The search query string for games.",
