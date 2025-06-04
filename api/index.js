@@ -37,7 +37,6 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 const publicPath = path.join(__dirname, '..', 'public'); 
 app.use(express.static(publicPath));
 
@@ -65,8 +64,8 @@ app.get("/", (req, res) => {
     `);
 });
 
-const swaggerAssetsPath = path.join(__dirname, '..', 'swagger-assets');
-app.use('/swagger-assets-dist', express.static(swaggerAssetsPath));
+const swaggerUiDistPath = path.join(__dirname, '..', 'node_modules', 'swagger-ui-dist');
+app.use('/swagger-assets-dist', express.static(swaggerUiDistPath));
 
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
