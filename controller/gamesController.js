@@ -29,14 +29,14 @@ export const getAllGames = async (req, res) => {
 
 export const getDetailGame = async (req, res) => {
     const { ihsangan_slug } = req.params;
+    console.log(ihsangan_slug);
     try {
         const game = await prisma.games.findFirst({
-            where: { ihsangan_slug, isactive: true },
+            where: { ihsangan_slug: ihsangan_slug, isactive: true },
             include: {
                 packages: true,
             }
         });
-
 
         if(!game) {
             return res
