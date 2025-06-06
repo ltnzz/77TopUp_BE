@@ -7,9 +7,9 @@ export const getAllGames = async (req, res) => {
             select: {
                 name: true,
                 image: true,
-                slug: true,
+                ihsangan_slug: true,
                 type: true,
-                isactive: true
+                isactive: true,
             }
         });
 
