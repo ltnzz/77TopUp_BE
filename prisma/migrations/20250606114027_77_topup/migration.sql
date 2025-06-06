@@ -46,10 +46,12 @@ CREATE TABLE "games" (
     "image" TEXT,
     "createdat" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "updatedat" TIMESTAMP(6),
-    "slug" TEXT NOT NULL,
     "type" VARCHAR(10),
     "description" TEXT,
     "isactive" BOOLEAN DEFAULT true,
+    "is_using_server" BOOLEAN DEFAULT false,
+    "ihsangan_slug" TEXT,
+    "image_public_id" TEXT,
 
     CONSTRAINT "games_pkey" PRIMARY KEY ("id_game")
 );
@@ -66,6 +68,7 @@ CREATE TABLE "packages" (
     "description" TEXT,
     "updatedat" TIMESTAMP(6),
     "isactive" BOOLEAN DEFAULT true,
+    "image_public_id" TEXT,
 
     CONSTRAINT "packages_pkey" PRIMARY KEY ("id_packages")
 );
@@ -89,7 +92,6 @@ CREATE TABLE "midtrans" (
 
 -- CreateTable
 CREATE TABLE "transactions" (
-    "id" SERIAL NOT NULL,
     "order_id" VARCHAR(100) NOT NULL,
     "email" VARCHAR(255) NOT NULL,
     "id_packages" VARCHAR(50) NOT NULL,
@@ -98,7 +100,7 @@ CREATE TABLE "transactions" (
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6),
 
-    CONSTRAINT "transactions_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "transactions_pkey" PRIMARY KEY ("order_id")
 );
 
 -- CreateIndex
@@ -108,13 +110,7 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "unique_email_admin" ON "admin"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "games_slug_key" ON "games"("slug");
-
--- CreateIndex
 CREATE UNIQUE INDEX "payments_order_id_key" ON "midtrans"("order_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "transactions_order_id_key" ON "transactions"("order_id");
 
 -- AddForeignKey
 ALTER TABLE "packages" ADD CONSTRAINT "packages_gameid_fkey" FOREIGN KEY ("gameid") REFERENCES "games"("id_game") ON DELETE CASCADE ON UPDATE NO ACTION;

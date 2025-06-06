@@ -27,7 +27,7 @@ export const createTransaction = async (req, res) => {
         const customerEmail = email && email.includes("@") ? email : "guest@example.com";
 
         const basePrice = selectedPackage.price;
-        const tax = Math.round(basePrice * 0.12);
+        const tax = Math.round(basePrice * 0.11);
         const total = basePrice + tax;
 
         const itemDetails = [
@@ -39,7 +39,7 @@ export const createTransaction = async (req, res) => {
             },
             {
                 id: "PPN",
-                name: "PPN 12%",
+                name: "PPN 11%",
                 price: tax,
                 quantity: 1
             }

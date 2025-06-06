@@ -37,32 +37,35 @@ model otp {
 }
 
 model games {
-  id_game     String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  image       String?
-  createdat   DateTime?  @default(now()) @db.Timestamp(6)
-  updatedat   DateTime?  @db.Timestamp(6)
-  slug        String     @unique
-  type        String?    @db.VarChar(10)
-  description String?
-  isactive    Boolean?   @default(true)
-  midtrans    midtrans[]
-  packages    packages[]
+  id_game         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  image           String?
+  createdat       DateTime?  @default(now()) @db.Timestamp(6)
+  updatedat       DateTime?  @db.Timestamp(6)
+  type            String?    @db.VarChar(10)
+  description     String?
+  isactive        Boolean?   @default(true)
+  is_using_server Boolean?   @default(false)
+  ihsangan_slug   String? 
+  image_public_id String?
+  midtrans        midtrans[]
+  packages        packages[]
 }
 
 model packages {
-  id_packages String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  price       Float
-  tag         String?
-  gameid      String?    @db.Uuid
-  image       String
-  createdat   DateTime?  @default(now()) @db.Timestamp(6)
-  description String?
-  updatedat   DateTime?  @db.Timestamp(6)
-  isactive    Boolean?   @default(true)
-  midtrans    midtrans[]
-  games       games?     @relation(fields: [gameid], references: [id_game], onDelete: Cascade, onUpdate: NoAction)
+  id_packages     String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  price           Float
+  tag             String?
+  gameid          String?    @db.Uuid
+  image           String
+  createdat       DateTime?  @default(now()) @db.Timestamp(6)
+  description     String?
+  updatedat       DateTime?  @db.Timestamp(6)
+  isactive        Boolean?   @default(true)
+  image_public_id String?
+  midtrans        midtrans[]
+  games           games?     @relation(fields: [gameid], references: [id_game], onDelete: Cascade, onUpdate: NoAction)
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -83,8 +86,7 @@ model midtrans {
 }
 
 model transactions {
-  id           Int       @id @default(autoincrement())
-  order_id     String    @unique @db.VarChar(100)
+  order_id     String    @id @db.VarChar(100)
   email        String    @db.VarChar(255)
   id_packages  String    @db.VarChar(50)
   gross_amount Int

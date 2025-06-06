@@ -14,7 +14,7 @@ import gameRouter from "../routes/gameRouter.js";
 import adminRouter from "../routes/adminRouter.js";
 import searchBarRouter from "../routes/searchBarRouter.js";
 import cloudRouter from "../routes/cloudRouter.js";
-import midtransRouter from "../routes/midtrans.js"
+import midtransRouter from "../routes/midtransRouter.js"
 
 import cors from "cors";
 import cron from "../utils/cleanOtp.js";

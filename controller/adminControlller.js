@@ -1,16 +1,10 @@
 import prisma from '../config/db.js';
-import generateUniqueSlug from '../utils/slugify.js';
+// import generateUniqueSlug from '../utils/slugify.js';
 import { deleteImageFromCloudinary, streamUpload } from '../utils/cloud.js';
 
 export const addGame = async (req, res) => {
     try {
-        const { name, description, type } = req.body;
-    
-        if (!name || !req.file || !type) {
-            return res.status(400).json({
-                message: "Harap isi semua field yang diperlukan (name, image, type)"
-            });
-        }
+        const { name, description, type, ihsangan_slug, is_using_server } = req.body;
         
         const checkGame = await prisma.games.findFirst({ where: {name} });
         if(checkGame) {
@@ -19,20 +13,24 @@ export const addGame = async (req, res) => {
             })
         };
 
-        const slug = await generateUniqueSlug(name, "games");
+        // const slug = await generateUniqueSlug(name, "games");
 
         let imageURL = "";
         if(req.file) {
-            imageURL = await streamUpload(req.file.buffer, "games");
+            const uploadResult = await streamUpload(req.file.buffer, "games");
+            imageURL = uploadResult.secure_url;
         }
         
+        const isUsingServerBoolean = is_using_server === "true"; 
+
         const game = await prisma.games.create({
             data: {
                 name, 
-                slug, 
-                description: description || "", 
-                image: imageURL  || "", 
-                type
+                description, 
+                image: imageURL, 
+                type,
+                ihsangan_slug,
+                is_using_server: isUsingServerBoolean
             }
         })
 
@@ -55,16 +53,27 @@ export const updateGame = async (req, res) => {
                 message: "Game tidak ditemukan."
             });
         }
-        
+
         let newImageURL = game.image;
         let newImagePublicId = game.image_public_id;
 
+        const hasChange = (
+            game.name !== name ||
+            game.description !== description ||
+            game.type !== type ||
+            game.image !== newImageURL
+        );
+
+        if (!hasChange) {
+            return res.status(400).json({
+                message: "Tidak ada perubahan data."
+            })
+        }
+
         if(req.file) {
-            // imageURL = await streamUpload(req.file.buffer, "games");
             if (game.image_public_id) {
                 await deleteImageFromCloudinary(game.image_public_id);
             }
-
             const uploadResult = await streamUpload(req.file.buffer, "games");
             newImageURL = uploadResult.secure_url;
             newImagePublicId = uploadResult.public_id;
@@ -76,43 +85,20 @@ export const updateGame = async (req, res) => {
             newImagePublicId = null;
         }
 
-        // if(
-        //     game.name === name &&
-        //     game.description === description &&
-        //     game.type === type
-        // ) {
-        //     return res.status(400).json({
-        //         message: "Tidak ada perubahan data."
-        //     })
-        // }
-
-        const hasChange = (
-            game.name !== name || 
-            game.description !== description ||
-            game.type !== type ||
-            game.image !== newImageURL 
-        );
-
-        if (!hasChange) {
-            return res.status(400).json({
-                message: "Tidak ada perubahan data."
-            })
-        }
-
         const updateGame = await prisma.games.update({
             where: { id_game },
             data: {
                 name,  
                 description: description || "", 
-                image: newImageURL  || "",
-                image_public_id: newImagePublicId || "",
+                image: newImageURL,
+                image_public_id: newImagePublicId,
                 type,
                 updatedat: new Date()
             }
         });
         
         res.status(200).json({
-            message: "Game updated successfully",
+            message: `Game ${name} updated successfully.`,
             updateGame
         });
     } catch(err) {
@@ -244,12 +230,6 @@ export const addPackageGame = async (req, res) => {
     try {
         const { gameid, name, price, tag, description } = req.body;
 
-        if (!gameid || !name || !price || !req.file) {
-            return res.status(400).json({
-                message: "Harap isi semua field yang diperlukan (gameid, name, price, image)"
-            });
-        }
-
         const existingPackage = await prisma.packages.findFirst({
             where: {
                 name,
@@ -259,14 +239,7 @@ export const addPackageGame = async (req, res) => {
 
         if (existingPackage) {
             return res.status(400).json({
-                message: "Package dengan nama yang sama sudah ada di game ini."
-            });
-        }
-        
-        const game = await prisma.games.findUnique({ where: { id_game: gameid } });
-        if (!game) {
-            return res.status(400).json({
-                message: "Game tidak ditemukan."
+                message: `Package dengan ${name} sudah ada di game ${gameid}.`
             });
         }
 
@@ -274,7 +247,8 @@ export const addPackageGame = async (req, res) => {
 
         let imageURL = "";
         if(req.file) {
-            imageURL = await streamUpload(req.file.buffer, "packages");
+            const uploadResult = await streamUpload(req.file.buffer, "packages");
+            imageURL = uploadResult.secure_url;
         }
 
         const newPackage = await prisma.packages.create({
@@ -289,7 +263,7 @@ export const addPackageGame = async (req, res) => {
         });
 
         return res.status(201).json({
-            message: `Package berhasil ditambahkan pada game ${gameid}.`,
+            message: `Package ${name} berhasil ditambahkan pada game ${gameid}.`,
             newPackage
         });
     } catch(err) {
@@ -303,7 +277,7 @@ export const addPackageGame = async (req, res) => {
 
 export const updatePackage = async (req, res) => {
     try {
-        const  {id_packages, name, price, tag, image, description } = req.body;
+        const  { gameid, id_packages, name, price, tag, description } = req.body;
 
         const packages = await prisma.packages.findUnique({where: { id_packages }});
         if (!packages) {
@@ -312,27 +286,55 @@ export const updatePackage = async (req, res) => {
             });
         }      
         
-        console.log(id_packages);
-        const priceFloat = parseFloat(price);
-
-        if(
-            packages.name === name &&
-            packages.price === priceFloat &&
-            packages.tag === tag &&
-            packages.image === image &&
-            packages.description === description
-        ) {
+        const game = await prisma.games.findUnique({ where: { id_game: gameid } });
+        if (!game) {
             return res.status(400).json({
-                message: "Tidak ada perubahan pada package."
+                message: "Game tidak ditemukan."
+            });
+        }
+
+        let newImageURL = packages.image;
+        let newImagePublicId = packages.image_public_id;
+        const priceFloat = parseFloat(price);
+        
+        const hasChange = (
+            packages.name !== name ||
+            packages.price !== priceFloat ||
+            packages.tag !== tag ||
+            packages.description !== description ||
+            packages.image !== newImageURL
+        );
+        
+        if (!hasChange) {
+            return res.status(400).json({
+                message: `Tidak ada perubahan pada package ${name}.`
             })
         }
+
+        if(req.file) {
+            if (packages.image_public_id) {
+                await deleteImageFromCloudinary(packages.image_public_id);
+            }
+            const uploadResult = await streamUpload(req.file.buffer, "packages");
+            newImageURL = uploadResult.secure_url;
+            newImagePublicId = uploadResult.public_id;
+        } else if (req.body.image === '') {
+            if (packages.image_public_id) {
+                await deleteImageFromCloudinary(packages.image_public_id);
+            }
+            newImageURL = null; 
+            newImagePublicId = null;
+        }
+
 
         const updatePackage = await prisma.packages.update({
             where: { id_packages },
             data: {
+                gameid: gameid,
                 name,
                 price: priceFloat,
-                image: image || "",
+                image: newImageURL,
+                image_public_id: newImagePublicId,
                 tag: tag || "",
                 description: description || "",
                 updatedat: new Date()
@@ -340,9 +342,9 @@ export const updatePackage = async (req, res) => {
         })
         
         return res.status(200).json({
-            message: "Package berhasil diupdate",
+            message: `Package ${name} berhasil diupdate`,
             updatePackage
-        })
+        });
     } catch(err) {
         console.error(err);
         return res.status(400).json({

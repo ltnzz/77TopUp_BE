@@ -4,16 +4,29 @@ import jwt from "jsonwebtoken";
 
 export const addNewUser = async (req, res) => {
     try {
-        const { email, username, password } = req.body;
+        const { email, username, password, confirmPassword } = req.body;
 
         if(!email.endsWith("@gmail.com")) {
-            return res.status(400).json({ auth: false, message: "Harap gunakan email dengan domain @gmail.com." });
+            return res.status(400).json({ 
+                auth: false, 
+                message: "Harap gunakan email dengan domain @gmail.com." 
+            });
         }
 
         const checkEmail = await prisma.users.findUnique({ where: { email } }); //cek email di database
-
+        
         if(checkEmail) {
-            throw new Error("Email ini sudah terdaftar. Silahkan gunakan email lain.");
+            return res.status(400).json({
+                auth: false,
+                message: "Email ini sudah terdaftar. Silahkan gunakan email lain."
+            })
+        }
+        
+        if (password !== confirmPassword) {
+            return res.status(400).json({
+                auth: false,
+                error: "Password dan Konfirmasi Password tidak cocok."
+            })
         }
 
         const data = await prisma.users.create({ 
@@ -64,6 +77,7 @@ export const login = async (req, res) => {
             return res
                 .status(400)
                 .json({
+                    auth: false,
                     message: "email dan password harus terisi."
                 });
         }
@@ -84,7 +98,8 @@ export const login = async (req, res) => {
             return res
                 .status(401)
                 .json({
-                    message: "kata sandi tidak valid."
+                    auth: false,
+                    message: "kata sandi tidak valid. Gunakan kombinasi min 8 karakter, mengandung setidaknya 1 huruf kecil, 1 huruf besar dan 1 digit angka."
                 });
         }
 
@@ -114,6 +129,7 @@ export const admin = async (req, res) => {
             return res
                 .status(400)
                 .json({ 
+                    auth: false,
                     message: "Harap gunakan email dengan domain @gmail.com." 
                 }); 
         }
@@ -122,6 +138,7 @@ export const admin = async (req, res) => {
             return res
                 .status(400)
                 .json({
+                    auth: false,
                     message: "email dan password harus terisi."
                 });
         }
@@ -132,6 +149,7 @@ export const admin = async (req, res) => {
             return res
                 .status(400)
                 .json({
+                    auth: false,
                     message: "email tidak terdaftar."
                 });
         }
@@ -153,6 +171,7 @@ export const admin = async (req, res) => {
         return res
             .status(200)
             .json({
+                auth: true,
                 message: "OTP telah dikirimkan ke email Anda.",
                 // next: 
             });    
