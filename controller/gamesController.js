@@ -28,10 +28,10 @@ export const getAllGames = async (req, res) => {
 }
 
 export const getDetailGame = async (req, res) => {
-    const { slug } = req.params;
+    const { ihsangan_slug } = req.params;
     try {
         const game = await prisma.games.findFirst({
-            where: { slug, isactive: true },
+            where: { ihsangan_slug, isactive: true },
             include: {
                 packages: true,
             }
@@ -50,7 +50,7 @@ export const getDetailGame = async (req, res) => {
             .json({
                 game: {
                     name: game.name,
-                    slug: game.slug,
+                    ihsangan_slug: game.ihsangan_slug,
                     image: game.image,
                     isactive: game.isactive,
                 },
