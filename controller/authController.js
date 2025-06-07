@@ -200,7 +200,7 @@ export const adminVerify = async (req, res) => {
                 { id: admin.id_admin, role: "admin" },
                 process.env.JWT_SECRET,                
                 { expiresIn: '2h' }
-            ); //token untuk authorization admin (edit) kadaluarsan dalam 12 jam
+            );
             
         return res
             .status(202)
