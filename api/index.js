@@ -23,7 +23,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const allowedOrigin = [process.env.FE_ORIGIN, "http://localhost:7700"];
+const allowedOrigin = ["https://77-top-up-fe.vercel.app/", "http://localhost:7700"];
 
 app.use(
     cors({
