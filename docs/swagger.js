@@ -843,27 +843,28 @@ export const openApiSpec = {
       Game: {
         type: "object",
         properties: {
-          id: { type: "string", description: "Unique ID of the game." },
+          id_game: { type: "string", description: "Unique ID of the game." },
           name: { type: "string", description: "Name of the game." },
-          slug: { type: "string", description: "SEO-friendly slug for the game (unique)." },
+          ihsangan_slug: { type: "string", description: "SEO-friendly slug for the game (unique)." },
           description: { type: "string", description: "Detailed description of the game." },
-          // Removed price here, as it's now in Package schema
           type: { type: "string", description: "Type of game (e.g., 'Mobile', 'PC')." }, // Menambahkan type
           imageUrl: { type: "string", format: "url", description: "URL to the game's main image." },
           imagePublicId: { type: "string", description: "Public ID of the image for Cloudinary management." },
           active: { type: "boolean", description: "Indicates if the game is currently active and visible." },
+          is_using_server: { type: "boolean", description: "Indicates if the game is currently using server or not." },
           createdAt: { type: "string", format: "date-time", description: "Timestamp when the game was created." },
           updatedAt: { type: "string", format: "date-time", description: "Timestamp when the game was last updated." },
         },
         example: {
-          id: "65c72b2f9f1b2c001c8e4d2a",
+          id_game: "65c72b2f9f1b2c001c8e4d2a",
           name: "Mobile Legends: Bang Bang",
-          slug: "mobile-legends",
+          ihsangan_slug: "ml",
           description: "5v5 MOBA game on mobile.",
           type: "Mobile", // Contoh type
           imageUrl: "https://example.com/mlbb.jpg",
           imagePublicId: "games/Mobile_Legends",
           active: true,
+          is_using_server: true,
           createdAt: "2023-01-01T12:00:00Z",
           updatedAt: "2023-01-05T15:30:00Z"
         }
@@ -871,7 +872,7 @@ export const openApiSpec = {
       Package: {
         type: "object",
         properties: {
-          id: { type: "string", description: "Unique ID of the package." },
+          id_packages: { type: "string", description: "Unique ID of the package." },
           gameid: { type: "string", description: "ID of the game this package belongs to." }, // Menggunakan gameid
           name: { type: "string", description: "Name or quantity of the package (e.g., '100 Diamonds', 'Weekly Pass')." }, // Sesuaikan dengan 'name'
           price: { type: "number", format: "float", description: "Price of this specific package." },
@@ -884,7 +885,7 @@ export const openApiSpec = {
           updatedAt: { type: "string", format: "date-time", description: "Timestamp when the package was last updated." },
         },
         example: {
-          id: "65c72b2f9f1b2c001c8e4d2b",
+          id_packages: "65c72b2f9f1b2c001c8e4d2b",
           gameid: "65c72b2f9f1b2c001c8e4d2a",
           name: "500 Diamonds",
           price: 50000.00,
