@@ -72,7 +72,7 @@ export const createTransaction = async (req, res) => {
     });
 
 
-        res.json({
+        return res.json({
             token: transaction.token,
             // redirect_url: transaction.redirect_url,
             message: `Transaction created successfully`
