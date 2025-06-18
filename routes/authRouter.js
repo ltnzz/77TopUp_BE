@@ -10,6 +10,6 @@ const router = express.Router();
 router.post("/77topup/sign-up", validateCreateUser, addNewUser);
 router.post("/77topup/sign-in", login);
 router.post("/77topup/admin/login", sendOTP, admin);
-router.post("/77topup/admin/verify", verifyOTP, adminVerify, verifyToken);
+router.post("/77topup/admin/verify", verifyOTP, adminVerify, verifyToken);  
 
 export default router;

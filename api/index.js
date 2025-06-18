@@ -23,7 +23,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const allowedOrigin = ["https://77-top-up-fe.vercel.app", "http://localhost:7700"];
+const allowedOrigin = ["https://77-topup-fe.vercel.app", "http://localhost:7700"];
 
 app.use(
     cors({
@@ -39,8 +39,6 @@ app.use(express.urlencoded({ extended: true }));
 
 const publicPath = path.join(__dirname, '..', 'public'); 
 app.use(express.static(publicPath));
-
-// app.get("/", (req, res) => res.send("Hello, Vercel!"));
 
 app.get("/", (req, res) => {
     res.send(`
