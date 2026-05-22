@@ -23,12 +23,29 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const allowedOrigin = ["https://77-topup-fe.vercel.app", "http://localhost:7700"];
+const defaultAllowedOrigins = [
+    "https://77-top-up-fe.vercel.app",
+    "https://77-topup-fe.vercel.app",
+    "http://localhost:7700"
+];
+
+const envAllowedOrigins = (process.env.FE_ORIGIN || "")
+    .split(",")
+    .map((origin) => origin.trim().replace(/^["']|["']$/g, "").replace(/\/$/, ""))
+    .filter(Boolean);
+
+const allowedOrigins = [...new Set([...defaultAllowedOrigins, ...envAllowedOrigins])];
 
 app.use(
     cors({
-        origin: allowedOrigin,
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+                return callback(null, true);
+            }
+
+            return callback(new Error("Not allowed by CORS"));
+        },
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true
     })
